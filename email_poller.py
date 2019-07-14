@@ -2,17 +2,15 @@
 """Module for email polling."""
 
 import argparse
+import email
 import time
+from imaplib import IMAP4_SSL
+from imaplib import IMAP4_SSL_PORT
 from typing import Any
 from typing import Callable
-from typing import Dict
 from typing import List
 from typing import Tuple
 from typing import Union
-
-import email
-from imaplib import IMAP4_SSL
-from imaplib import IMAP4_SSL_PORT
 
 from email_to_patch import email_to_patch
 
@@ -27,6 +25,7 @@ class EmailConnectionInfo():
         email_host: str,
         email_port: int = IMAP4_SSL_PORT,
     ) -> None:
+        """Constructor."""
         self.user = email_user
         self.passw = email_pass
         self.host = email_host
@@ -42,6 +41,7 @@ class EmailPoller():
         callback: Callable[[List[Any]], None],
         search_args: Tuple[Union[str, None], str] = (None, 'ALL'),
     ) -> None:
+        """Constructor."""
         self._info = email_info
         self._callback = callback
         self._search_args = search_args
@@ -106,7 +106,8 @@ class EmailPoller():
             time.sleep(period_s)
 
 
-def parse_args():
+def parse_args() -> None:
+    """Parse email polling arguments."""
     parser = argparse.ArgumentParser(description='Launch email poller.')
     parser.add_argument(
         'email_user',
@@ -125,7 +126,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def test_callback(raw_email_data: List[Any]) -> None:
+def _test_callback(raw_email_data: List[Any]) -> None:
     print(f'===new email!====')
     email_string = raw_email_data[0][1].decode('utf-8')
     msg = email.message_from_string(email_string)
@@ -133,6 +134,7 @@ def test_callback(raw_email_data: List[Any]) -> None:
 
 
 def main():
+    """Email polling entrypoint for testing."""
     args = parse_args()
     info = EmailConnectionInfo(
         args.email_user,
@@ -142,7 +144,7 @@ def main():
     )
     poller = EmailPoller(
         info,
-        test_callback,
+        _test_callback,
         ('SUBJECT', 'PATCH'),
     )
     poller.poll()

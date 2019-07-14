@@ -1,7 +1,7 @@
 """Module for converting emails to patch files."""
 
-from email.message import EmailMessage
 import os
+from email.message import EmailMessage
 from typing import Tuple
 
 
@@ -47,7 +47,7 @@ def _crlf_to_lf(file_path: str) -> None:
 
     :param file_path: the file to convert
     """
-    contents = open(file_path,'r').read()
+    contents = open(file_path, 'r').read()
     f = open(file_path, 'w', newline='\n')
     f.write(contents)
     f.close()
@@ -60,9 +60,9 @@ def email_to_patch(msg: EmailMessage, dest_path: str):
     :param msg: the email message
     :param dest_path: the directory in which to create the patch file
     """
-    msg_from = msg["from"]
-    msg_date = msg["date"]
-    msg_subject = msg["subject"]
+    msg_from = msg['from']
+    msg_date = msg['date']
+    msg_subject = msg['subject']
     msg_payload = msg.get_payload()
 
     index, total = _get_patch_index(msg_subject)
