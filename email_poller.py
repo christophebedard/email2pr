@@ -14,6 +14,8 @@ import email
 from imaplib import IMAP4_SSL
 from imaplib import IMAP4_SSL_PORT
 
+from email_to_patch import patch_from_email
+
 
 class EmailConnectionInfo():
     """Email connection information wrapper."""
@@ -76,8 +78,8 @@ class EmailPoller():
         server.logout()
         return data
 
-    def _process_new_email(self, raw_email: List[Any]) -> None:
-        self._callback(raw_email)
+    def _process_new_email(self, raw_email_data: List[Any]) -> None:
+        self._callback(raw_email_data)
 
     def poll(self, period_s: int = 5) -> None:
         """
@@ -98,8 +100,8 @@ class EmailPoller():
                 # Check if new
                 if uid > last_uid:
                     last_uid = uid
-                    raw_email = self._get_email_from_uid(uid)
-                    self._process_new_email(raw_email)
+                    raw_email_data = self._get_email_from_uid(uid)
+                    self._process_new_email(raw_email_data)
 
             time.sleep(period_s)
 
@@ -123,8 +125,11 @@ def parse_args():
     return parser.parse_args()
 
 
-def test_callback(raw_email: List[Any]) -> None:
-    print(f'new email! --> \n{raw_email}')
+def test_callback(raw_email_data: List[Any]) -> None:
+    print(f'===new email!====')
+    email_string = raw_email_data[0][1].decode('utf-8')
+    msg = email.message_from_string(email_string)
+    patch_from_email(msg, '/tmp')
 
 
 def main():
