@@ -41,6 +41,13 @@ def _get_patch_title(subject: str) -> str:
     return title
 
 
+def _crlf_to_lf(file_path: str) -> None:
+    fileContents = open(file_path,'r').read()
+    f = open(file_path,'w', newline='\n')
+    f.write(fileContents)
+    f.close()
+
+
 def email_to_patch(msg: EmailMessage, dest_path: str):
     """
     Create a patch file from a patch email.
@@ -49,7 +56,7 @@ def email_to_patch(msg: EmailMessage, dest_path: str):
     :param dest_path: the directory in which to create the patch file
     """
     msg_from = msg["from"]
-    msg_data = msg["date"]
+    msg_date = msg["date"]
     msg_subject = msg["subject"]
     msg_payload = msg.get_payload()
 
@@ -59,9 +66,12 @@ def email_to_patch(msg: EmailMessage, dest_path: str):
 
     full_path = os.path.join(dest_path, file_name)
     with open(full_path, 'w') as f:
-        f.write('From\n')
-        f.write(f'From: {msg_from}\n')
-        f.write(f'Date: {msg_data}\n')
-        f.write(f'Subject: {msg_subject}\n')
-        f.write('\n')
-        f.write(msg_payload)
+        f.writelines([
+            'From\n',
+            f'From: {msg_from}\n',
+            f'Date: {msg_date}\n',
+            f'Subject: {msg_subject}\n',
+            '\n',
+            msg_payload,
+        ])
+    _crlf_to_lf(full_path)
