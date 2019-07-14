@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Module for dealing with git repos."""
 
-from git import Repo
 import os
 from typing import Union
+
+from git import Repo
 
 
 class RepoInfo():
@@ -24,7 +25,7 @@ class RepoInfo():
         if name is None:
             name = self._get_name_from_url(self.url)
         self.name = name
-    
+
     def _get_name_from_url(self, url: str) -> str:
         last_slash = url.rfind('/')
         name = url[(last_slash + 1):]
@@ -53,7 +54,7 @@ class RepoManager():
         info = RepoInfo(url)
         path = os.path.join(self._repo_dir, info.name)
         print(f"cloning repo '{info.name}' to: {path}")
-        repo = Repo.clone_from(info.url, path)
+        _ = Repo.clone_from(info.url, path)
 
     def get_key_value(self, body: str, key: str) -> Union[str, None]:
         """
@@ -77,7 +78,7 @@ class RepoManager():
         :param body: the body in which to search
         :return: the URL value, or `None` if not found
         """
-        get_key_value(body, 'Github-Repo-Url:')
+        self.get_key_value(body, 'Github-Repo-Url:')
 
 
 def main():
