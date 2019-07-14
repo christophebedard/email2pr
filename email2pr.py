@@ -7,8 +7,11 @@ from typing import Any
 from typing import List
 
 import email_poller
+
 from email_to_patch import email_to_patch
+
 import repo_manager
+
 import utils
 
 
@@ -26,7 +29,7 @@ class EmailToPr():
         )
 
     def _email_callback(self, raw_email_data: List[Any]) -> None:
-        """Main logic, on new email."""
+        """Execute logic, on new email."""
         print(f'===new email!====')
         msg = msg = utils.email_from_raw_data(raw_email_data)
         # Clone repo
@@ -44,6 +47,7 @@ class EmailToPr():
         # Create PR
 
     def poll(self) -> None:
+        """Launch polling of email server."""
         self._poller.poll()
 
 
@@ -56,7 +60,7 @@ def parse_args() -> Any:
 
 
 def main() -> None:
-    """Main entrypoint for email2pr."""
+    """Do setup for email2pr."""
     args = parse_args()
     etopr = EmailToPr(args)
     etopr.poll()

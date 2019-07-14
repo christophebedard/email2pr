@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Module for dealing with git repos."""
 
-import os
 import argparse
+import os
 from email.message import EmailMessage
 from typing import Any
 from typing import Tuple
 from typing import Union
 
 from git import Repo
+
 import utils
 
 
@@ -65,7 +66,15 @@ class RepoManager():
         repo = Repo.clone_from(info.url, info.path)
         return repo, info
 
-    def clone_from_email(self, msg: EmailMessage) -> Tuple[Union[Repo, None], Union[RepoInfo, None]]:
+    def clone_from_email(
+        self, msg: EmailMessage
+    ) -> Tuple[Union[Repo, None], Union[RepoInfo, None]]:
+        """
+        Clone repo corresponding to email.
+
+        :param msg: the email message
+        :return: (repo, repo information) or (`None`, `None`) if email has no URL
+        """
         url = utils.get_repo_url(msg.get_payload())
         if url is None:
             return None, None
@@ -73,6 +82,7 @@ class RepoManager():
 
     @classmethod
     def from_args(cls, args: Any):
+        """Create RepoManager instance from parsed arguments."""
         return RepoManager(args.repo_dir)
 
 

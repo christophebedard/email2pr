@@ -2,7 +2,6 @@
 """Module for email polling."""
 
 import argparse
-import email
 import time
 from imaplib import IMAP4_SSL
 from imaplib import IMAP4_SSL_PORT
@@ -13,6 +12,7 @@ from typing import Tuple
 from typing import Union
 
 from email_to_patch import email_to_patch
+
 import utils
 
 
@@ -31,10 +31,10 @@ class EmailConnectionInfo():
         self.passw = email_pass
         self.host = email_host
         self.port = email_port
-    
+
     @classmethod
     def from_args(cls, args: Any):
-        """Get an EmailConnectionInfo object from args."""
+        """Create EmailConnectionInfo instance from parsed arguments."""
         return EmailConnectionInfo(
             args.email_user,
             args.email_pass,
