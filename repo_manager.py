@@ -2,9 +2,14 @@
 """Module for dealing with git repos."""
 
 import os
+import argparse
+from email.message import EmailMessage
+from typing import Any
+from typing import Tuple
 from typing import Union
 
 from git import Repo
+import utils
 
 
 class RepoInfo():
@@ -12,19 +17,23 @@ class RepoInfo():
 
     def __init__(
         self,
+        directory: str,
         url: str,
         name: str = None,
     ) -> None:
         """
         Constructor.
 
+        :param directory: the directory that contains this repo
         :param name: the name to use as a reference
         :param url: the origin remote URL for the repo
         """
+        self.dir = directory
         self.url = url
         if name is None:
             name = self._get_name_from_url(self.url)
         self.name = name
+        self.path = os.path.join(self.dir, self.name)
 
     def _get_name_from_url(self, url: str) -> str:
         last_slash = url.rfind('/')
@@ -49,41 +58,43 @@ class RepoManager():
         self._repo_dir = repo_dir
         self._repos = {}
 
-    def clone(self, url: str) -> None:
+    def clone(self, url: str) -> Tuple[Repo, RepoInfo]:
         """Clone a new repo."""
-        info = RepoInfo(url)
-        path = os.path.join(self._repo_dir, info.name)
-        print(f"cloning repo '{info.name}' to: {path}")
-        _ = Repo.clone_from(info.url, path)
+        info = RepoInfo(self._repo_dir, url)
+        print(f"cloning repo '{info.name}' to: {info.path}")
+        repo = Repo.clone_from(info.url, info.path)
+        return repo, info
 
-    def get_key_value(self, body: str, key: str) -> Union[str, None]:
-        """
-        Extract value for a given key.
+    def clone_from_email(self, msg: EmailMessage) -> Tuple[Union[Repo, None], Union[RepoInfo, None]]:
+        url = utils.get_repo_url(msg.get_payload())
+        if url is None:
+            return None, None
+        return self.clone(url)
 
-        :param body: the body in which to search
-        :param key: the key to look for
-        :return: the URL value, or `None` if not found
-        """
-        url = None
-        for line in body.splitlines():
-            if line.startswith(key):
-                sep_index = line.find(':')
-                url = line[(sep_index + 1):].strip()
-        return url
-
-    def get_repo_url(self, body: str) -> Union[str, None]:
-        """
-        Extract repo URL value from body.
-
-        :param body: the body in which to search
-        :return: the URL value, or `None` if not found
-        """
-        self.get_key_value(body, 'Github-Repo-Url:')
+    @classmethod
+    def from_args(cls, args: Any):
+        return RepoManager(args.repo_dir)
 
 
-def main():
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add repo managing args."""
+    parser.add_argument(
+        '--repo-dir', '-d',
+        help='the directory in which to put the repos (default: %(default)s)',
+        default='/tmp/repos')
+
+
+def parse_args() -> Any:
+    """Parse email polling arguments."""
+    parser = argparse.ArgumentParser(description='Launch repo manager.')
+    add_args(parser)
+    return parser.parse_args()
+
+
+def main() -> None:
     """Entrypoint for testing."""
-    manager = RepoManager('/tmp/repos')
+    args = parse_args()
+    manager = RepoManager(args.repo_dir)
     manager.clone('https://github.com/christophebedard/email2pr.git')
 
 

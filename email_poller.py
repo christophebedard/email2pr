@@ -13,6 +13,7 @@ from typing import Tuple
 from typing import Union
 
 from email_to_patch import email_to_patch
+import utils
 
 
 class EmailConnectionInfo():
@@ -30,6 +31,16 @@ class EmailConnectionInfo():
         self.passw = email_pass
         self.host = email_host
         self.port = email_port
+    
+    @classmethod
+    def from_args(cls, args: Any):
+        """Get an EmailConnectionInfo object from args."""
+        return EmailConnectionInfo(
+            args.email_user,
+            args.email_pass,
+            args.email_host,
+            args.email_port,
+        )
 
 
 class EmailPoller():
@@ -106,9 +117,8 @@ class EmailPoller():
             time.sleep(period_s)
 
 
-def parse_args() -> None:
-    """Parse email polling arguments."""
-    parser = argparse.ArgumentParser(description='Launch email poller.')
+def add_args(parser: argparse.ArgumentParser) -> None:
+    """Add email polling args."""
     parser.add_argument(
         'email_user',
         help='the email account username')
@@ -123,25 +133,25 @@ def parse_args() -> None:
         '--email-port', '-p',
         help='the port number (default: %(default)s)',
         default=IMAP4_SSL_PORT)
+
+
+def parse_args() -> Any:
+    """Parse email polling arguments."""
+    parser = argparse.ArgumentParser(description='Launch email poller.')
+    add_args(parser)
     return parser.parse_args()
 
 
 def _test_callback(raw_email_data: List[Any]) -> None:
     print(f'===new email!====')
-    email_string = raw_email_data[0][1].decode('utf-8')
-    msg = email.message_from_string(email_string)
+    msg = utils.email_from_raw_data(raw_email_data)
     email_to_patch(msg, '/tmp')
 
 
-def main():
+def main() -> None:
     """Email polling entrypoint for testing."""
     args = parse_args()
-    info = EmailConnectionInfo(
-        args.email_user,
-        args.email_pass,
-        args.email_host,
-        args.email_port,
-    )
+    info = EmailConnectionInfo.from_args(args)
     poller = EmailPoller(
         info,
         _test_callback,
