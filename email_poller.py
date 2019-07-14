@@ -3,9 +3,10 @@
 
 import argparse
 import time
+from typing import Dict
 from typing import List
 from typing import Tuple
-from typing import Dict
+from typing import Union
 
 import email
 from imaplib import IMAP4_SSL
@@ -21,13 +22,13 @@ class EmailPoller():
         email_pass: str,
         email_host: str,
         email_port: int = IMAP4_SSL_PORT,
-        subject_search: str = 'PATCH',
+        search_args: Tuple[Union[str, None], str] = (None, 'ALL'),
     ) -> None:
         self._email_user = email_user
         self._email_pass = email_pass
         self._email_host = email_host
         self._email_port = email_port
-        self._subject_search = subject_search
+        self._search_args = search_args
 
     def _get_server(self) -> IMAP4_SSL:
         """Login and return server object."""
@@ -40,7 +41,8 @@ class EmailPoller():
         """Get all email uids."""
         server = self._get_server()
         server.select('"[Gmail]/All Mail"')
-        result, data = server.uid('search', 'SUBJECT', self._subject_search)
+        arg_first, arg_second = self._search_args
+        result, data = server.uid('search', arg_first, arg_second)
         assert result == 'OK', 'uid() failed!'
         ids = data[0].split()
         server.logout()
@@ -115,6 +117,7 @@ def main():
         args.email_pass,
         args.email_host,
         args.email_port,
+        ('SUBJECT', 'PATCH'),
     )
     poller.poll()
 
