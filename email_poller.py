@@ -14,7 +14,7 @@ import email
 from imaplib import IMAP4_SSL
 from imaplib import IMAP4_SSL_PORT
 
-from email_to_patch import patch_from_email
+from email_to_patch import email_to_patch
 
 
 class EmailConnectionInfo():
@@ -129,7 +129,7 @@ def test_callback(raw_email_data: List[Any]) -> None:
     print(f'===new email!====')
     email_string = raw_email_data[0][1].decode('utf-8')
     msg = email.message_from_string(email_string)
-    patch_from_email(msg, '/tmp')
+    email_to_patch(msg, '/tmp')
 
 
 def main():

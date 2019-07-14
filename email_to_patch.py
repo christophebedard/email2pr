@@ -5,7 +5,7 @@ import os
 from typing import Tuple
 
 
-def get_patch_index(subject: str) -> Tuple[int, int]:
+def _get_patch_index(subject: str) -> Tuple[int, int]:
     """
     Get index of patch and the total number of related patches.
 
@@ -27,7 +27,7 @@ def get_patch_index(subject: str) -> Tuple[int, int]:
         return index, total
 
 
-def get_patch_title(subject: str) -> str:
+def _get_patch_title(subject: str) -> str:
     """
     Get formatted patch title/filename from patch email subject.
 
@@ -41,14 +41,20 @@ def get_patch_title(subject: str) -> str:
     return title
 
 
-def patch_from_email(msg: EmailMessage, dest_path: str):
+def email_to_patch(msg: EmailMessage, dest_path: str):
+    """
+    Create a patch file from a patch email.
+
+    :param msg: the email message
+    :param dest_path: the directory in which to create the patch file
+    """
     msg_from = msg["from"]
     msg_data = msg["date"]
     msg_subject = msg["subject"]
     msg_payload = msg.get_payload()
 
-    index, total = get_patch_index(msg_subject)
-    patch_title = get_patch_title(msg_subject)
+    index, total = _get_patch_index(msg_subject)
+    patch_title = _get_patch_title(msg_subject)
     file_name = f'{index:04}-{patch_title}.patch'
 
     full_path = os.path.join(dest_path, file_name)
