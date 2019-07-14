@@ -99,11 +99,11 @@ def parse_args():
         help='the email account password')
     parser.add_argument(
         '--email-host', '-a',
-        help='the email host address',
+        help='the email host address (default: %(default)s)',
         default='imap.gmail.com')
     parser.add_argument(
         '--email-port', '-p',
-        help='the port number',
+        help='the port number (default: %(default)s)',
         default=IMAP4_SSL_PORT)
     return parser.parse_args()
 
