@@ -9,6 +9,7 @@ from typing import Dict
 
 import email
 from imaplib import IMAP4_SSL
+from imaplib import IMAP4_SSL_PORT
 
 
 class EmailPoller():
@@ -19,7 +20,7 @@ class EmailPoller():
         email_user: str,
         email_pass: str,
         email_host: str,
-        email_port: int = 993, #imaplib.IMAP4_SSL_PORT,
+        email_port: int = IMAP4_SSL_PORT,
         subject_search: str = 'PATCH',
     ) -> None:
         self._email_user = email_user
@@ -88,13 +89,27 @@ class EmailPoller():
             time.sleep(period_s)
 
 
-def main():
+def parse_args():
     parser = argparse.ArgumentParser(description='Launch email poller.')
-    parser.add_argument('email_host', default='imap.gmail.com')
-    parser.add_argument('email_port', default='993')
-    parser.add_argument('email_user')
-    parser.add_argument('email_pass')
-    args = parser.parse_args()
+    parser.add_argument(
+        'email_user',
+        help='the email account username')
+    parser.add_argument(
+        'email_pass',
+        help='the email account password')
+    parser.add_argument(
+        '--email-host', '-a',
+        help='the email host address',
+        default='imap.gmail.com')
+    parser.add_argument(
+        '--email-port', '-p',
+        help='the port number',
+        default=IMAP4_SSL_PORT)
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
     poller = EmailPoller(
         args.email_user,
         args.email_pass,
