@@ -59,6 +59,7 @@ def email_to_patch(msg: EmailMessage, dest_path: str):
 
     full_path = os.path.join(dest_path, file_name)
     with open(full_path, 'w') as f:
+        f.write('From\n')
         f.write(f'From: {msg_from}\n')
         f.write(f'Date: {msg_data}\n')
         f.write(f'Subject: {msg_subject}\n')
