@@ -42,9 +42,14 @@ def _get_patch_title(subject: str) -> str:
 
 
 def _crlf_to_lf(file_path: str) -> None:
-    fileContents = open(file_path,'r').read()
-    f = open(file_path,'w', newline='\n')
-    f.write(fileContents)
+    """
+    Convert file to LF only.
+
+    :param file_path: the file to convert
+    """
+    contents = open(file_path,'r').read()
+    f = open(file_path, 'w', newline='\n')
+    f.write(contents)
     f.close()
 
 
