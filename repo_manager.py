@@ -3,6 +3,8 @@
 
 import argparse
 import os
+import shlex
+import subprocess
 import time
 from email.message import EmailMessage
 from typing import Any
@@ -100,6 +102,38 @@ class RepoManager():
         info = RepoInfo(self._repo_dir, url, target_branch)
         return self.clone(info), info
 
+    def _checkout_new_branch(
+        self,
+        repo: Repo,
+    ) -> None:
+        """Create and checkout new branch from current branch."""
+        current_branch_name = repo.active_branch
+        new_branch_name = f'{current_branch_name}-{time.strftime("%Y%m%d%H%M%S")}'
+        print(f"creating new branch '{new_branch_name}' from branch '{current_branch_name}'")
+        new_branch = repo.create_head(new_branch_name)
+        print('switching to new branch')
+        repo.head.reference = new_branch
+
+    def _apply_patch_file(
+        self,
+        repo: Repo,
+        patch_filename: str,
+    ) -> None:
+        """
+        Apply patch to repo.
+        
+        :param repo: the repo
+        :param patch_filename: the name of the patch file to apply
+        """
+        command = f'git am {patch_filename}'
+        args = shlex.split(command)
+        repo_directory = repo.working_dir
+        print(f'previous commit: {repo.head.commit}')
+        print(f"applying patch '{patch_filename}'")
+        output = subprocess.check_output(args, cwd=repo_directory)
+        print(f'output: {output}')
+        print(f'new commit: {repo.head.commit}')
+
     def apply_patch(
         self,
         repo: Repo,
@@ -114,15 +148,9 @@ class RepoManager():
         :param patch_filename: the name of the patch file (should be in the repo directory)
         """
         # Create new branch from the current one
-        current_branch_name = repo.active_branch
-        new_branch_name = f'{current_branch_name}-{time.strftime("%Y%m%d%H%M%S")}'
-        print(f"creating new branch '{new_branch_name}' from branch '{current_branch_name}'")
-        new_branch = repo.create_head(new_branch_name)
-        print('switching to new branch')
-        repo.head.reference = new_branch
-
+        self._checkout_new_branch(repo)
         # Apply patch file
-        # TODO
+        self._apply_patch_file(repo, patch_filename)
 
     @classmethod
     def from_args(cls, args: Any):
