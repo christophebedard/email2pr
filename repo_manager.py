@@ -62,7 +62,10 @@ class RepoManager():
         self._repo_dir = repo_dir
         self._repos = {}
 
-    def clone(self, info: RepoInfo) -> Union[Repo, None]:
+    def clone(
+        self,
+        info: RepoInfo,
+    ) -> Union[Repo, None]:
         """
         Clone a new repo, selecting a specific branch if given.
         
@@ -78,7 +81,8 @@ class RepoManager():
         return repo
 
     def clone_from_email(
-        self, msg: EmailMessage
+        self,
+        msg: EmailMessage,
     ) -> Tuple[Union[Repo, None], Union[RepoInfo, None]]:
         """
         Clone repo corresponding to email and checkout target branch.
