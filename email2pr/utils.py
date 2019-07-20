@@ -10,6 +10,15 @@ from typing import Union
 class EmailToPrError(Exception):
     """General class for email2pr error."""
 
+    def __init__(
+        self,
+        original_exception: Exception,
+        msg: str = '',
+    ) -> None:
+        original = str(original_exception).replace('\n', '\n\t')
+        formatted_msg = f'{msg}\n\t{original}'
+        super().__init__(formatted_msg)
+
 
 def email_from_raw_data(raw_email_data: List[Any]) -> EmailMessage:
     """Get email message from raw data."""

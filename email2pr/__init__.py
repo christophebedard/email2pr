@@ -46,7 +46,7 @@ class EmailToPr():
             # Create PR
             # TODO
         except utils.EmailToPrError as e:
-            print(f'email2pr failed: {e}')
+            print(f'email2pr error: {e}')
 
     def poll(self) -> None:
         """Launch polling of email server."""
