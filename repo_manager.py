@@ -152,6 +152,19 @@ class RepoManager():
         # Apply patch file
         self._apply_patch_file(repo, patch_filename)
 
+    def push(
+        self,
+        repo: Repo,
+    ) -> None:
+        """
+        Push current branch to remote.
+
+        :param repo: the repo object
+        """
+        print('pushing branch to remote')
+        info_list = repo.remotes.origin.push(refspec=repo.active_branch)
+        print(f'summary: {info_list[0].summary}')
+
     @classmethod
     def from_args(cls, args: Any):
         """Create RepoManager instance from parsed arguments."""

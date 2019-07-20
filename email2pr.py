@@ -43,8 +43,9 @@ class EmailToPr():
         # Apply git patch to new branch
         self._manager.apply_patch(repo, info, patch_filename)
         # Push to remote
-        # TODO
+        self._manager.push(repo)
         # Create PR
+        # TODO
 
     def poll(self) -> None:
         """Launch polling of email server."""
