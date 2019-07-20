@@ -35,8 +35,7 @@ class EmailToPr():
             # TODO maybe it already exists
             repo, info = self._manager.clone_from_email(msg)
             if repo is None or info is None:
-                print('No repo URL key!')
-                return None
+                raise utils.EmailToPrError('no repo URL key!')
             # Create patch file in repo directory
             patch_filename = patch.email_to_patch(msg, info.path)
             # Apply git patch to new branch
