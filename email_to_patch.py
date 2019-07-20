@@ -53,12 +53,16 @@ def _crlf_to_lf(file_path: str) -> None:
     f.close()
 
 
-def email_to_patch(msg: EmailMessage, dest_path: str):
+def email_to_patch(
+    msg: EmailMessage,
+    dest_path: str,
+) -> str:
     """
     Create a patch file from a patch email.
 
     :param msg: the email message
     :param dest_path: the directory in which to create the patch file
+    :return: the file name of the created patch file
     """
     msg_from = msg['from']
     msg_date = msg['date']
@@ -80,3 +84,4 @@ def email_to_patch(msg: EmailMessage, dest_path: str):
             msg_payload,
         ])
     _crlf_to_lf(full_path)
+    return file_name

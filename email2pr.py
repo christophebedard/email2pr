@@ -39,7 +39,7 @@ class EmailToPr():
             print('No repo URL key!')
             return None
         # Create patch file, add to repo directory
-        email_to_patch(msg, info.path)
+        patch_filename = email_to_patch(msg, info.path)
         # TODO
         # Create new branch
         # Apply git patch
