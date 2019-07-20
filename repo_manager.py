@@ -20,6 +20,7 @@ class RepoInfo():
         self,
         directory: str,
         url: str,
+        target_branch: str,
         name: str = None,
     ) -> None:
         """
@@ -27,6 +28,7 @@ class RepoInfo():
 
         :param directory: the directory that contains this repo
         :param name: the name to use as a reference
+        :param target_branch: the name of the branch to use
         :param url: the origin remote URL for the repo
         """
         self.dir = directory
@@ -34,6 +36,7 @@ class RepoInfo():
         if name is None:
             name = self._get_name_from_url(self.url)
         self.name = name
+        self.branch = target_branch
         self.path = os.path.join(self.dir, self.name)
 
     def _get_name_from_url(self, url: str) -> str:
@@ -59,26 +62,38 @@ class RepoManager():
         self._repo_dir = repo_dir
         self._repos = {}
 
-    def clone(self, url: str) -> Tuple[Repo, RepoInfo]:
-        """Clone a new repo."""
-        info = RepoInfo(self._repo_dir, url)
+    def clone(self, info: RepoInfo) -> Union[Repo, None]:
+        """
+        Clone a new repo, selecting a specific branch if given.
+        
+        :param info: the information of the repo to clone
+        :return: the cloned repo object, or `None` if it failed
+        """
         print(f"cloning repo '{info.name}' to: {info.path}")
-        repo = Repo.clone_from(info.url, info.path)
-        return repo, info
+        repo = None
+        if info.branch is None:
+            repo = Repo.clone_from(info.url, info.path)
+        else:
+            repo = Repo.clone_from(info.url, info.path, branch=info.branch)
+        return repo
 
     def clone_from_email(
         self, msg: EmailMessage
     ) -> Tuple[Union[Repo, None], Union[RepoInfo, None]]:
         """
-        Clone repo corresponding to email.
+        Clone repo corresponding to email and checkout target branch.
 
         :param msg: the email message
         :return: (repo, repo information) or (`None`, `None`) if email has no URL
         """
+        # URL is mandatory
         url = utils.get_repo_url(msg.get_payload())
         if url is None:
             return None, None
-        return self.clone(url)
+        # Target branch is not mandatory
+        target_branch = utils.get_target_branch(msg.get_payload())
+        info = RepoInfo(self._repo_dir, url, target_branch)
+        return self.clone(info), info
 
     @classmethod
     def from_args(cls, args: Any):
