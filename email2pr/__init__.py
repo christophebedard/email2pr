@@ -79,7 +79,3 @@ def main() -> None:
     p = params.Params('params.yaml')
     etopr = EmailToPr(p)
     etopr.poll()
-
-
-if __name__ == '__main__':
-    main()
