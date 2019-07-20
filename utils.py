@@ -37,7 +37,7 @@ def get_repo_url(body: str) -> Union[str, None]:
     :param body: the body in which to search
     :return: the URL value, or `None` if not found
     """
-    return get_key_value(body, 'Github-Repo-Url:')
+    return get_key_value(body, 'Github-Repo-Url')
 
 
 def get_target_branch(body: str) -> Union[str, None]:
@@ -47,4 +47,4 @@ def get_target_branch(body: str) -> Union[str, None]:
     :param body: the body in which to search
     :return: the target branch value, or `None` if not found
     """
-    return get_key_value(body, 'Target-Branch:')
+    return get_key_value(body, 'Target-Branch')
