@@ -73,10 +73,14 @@ def email_to_patch(
     patch_title = _get_patch_title(msg_subject)
     file_name = f'{index:04}-{patch_title}.patch'
 
+    # To be valid, there has to be a hash on the
+    # first line, even if it doesn't mean anything
+    fake_hash = '0' * 40
+
     full_path = os.path.join(dest_path, file_name)
     with open(full_path, 'w') as f:
         f.writelines([
-            'From\n',
+            f'From: {fake_hash}\n',
             f'From: {msg_from}\n',
             f'Date: {msg_date}\n',
             f'Subject: {msg_subject}\n',
