@@ -91,7 +91,7 @@ class RepoManager():
                 repo = Repo.clone_from(info.url, info.path, branch=info.branch)
             return repo
         except GitError as e:
-            raise utils.EmailToPrError(e, 'failed to clone repo')
+            raise utils.EmailToPrError('failed to clone repo', e)
 
     def clone_from_email(
         self,
@@ -146,19 +146,17 @@ class RepoManager():
             subprocess.check_output(args, cwd=repo_directory)
             print(f'new commit: {repo.head.commit}')
         except subprocess.CalledProcessError as e:
-            raise utils.EmailToPrError(e, 'failed to apply patch file')
+            raise utils.EmailToPrError('failed to apply patch file', e)
 
     def apply_patch(
         self,
         repo: Repo,
-        info: RepoInfo,
         patch_filename: str,
     ) -> None:
         """
         Apply patch to repo.
 
         :param repo: the repo object
-        :param info: the repo information
         :param patch_filename: the name of the patch file (should be in the repo directory)
         """
         # Create new branch from the current one
@@ -181,7 +179,7 @@ class RepoManager():
             info_list = repo.remotes.origin.push(refspec=repo.active_branch)
             print(f'summary: {info_list[0].summary}')
         except GitError as e:
-            raise utils.EmailToPrError(e, 'failed to push branch to remote')
+            raise utils.EmailToPrError('failed to push branch to remote', e)
 
     @classmethod
     def from_args(cls, args: Any):

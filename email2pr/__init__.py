@@ -40,7 +40,7 @@ class EmailToPr():
             # Create patch file in repo directory
             patch_filename = patch.email_to_patch(msg, info.path)
             # Apply git patch to new branch
-            self._manager.apply_patch(repo, info, patch_filename)
+            self._manager.apply_patch(repo, patch_filename)
             # Push to remote
             self._manager.push(repo)
             # Create PR

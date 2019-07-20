@@ -12,12 +12,13 @@ class EmailToPrError(Exception):
 
     def __init__(
         self,
-        original_exception: Exception,
-        msg: str = '',
+        msg: str,
+        exception: Union[Exception, None] = None,
     ) -> None:
-        original = str(original_exception).replace('\n', '\n\t')
-        formatted_msg = f'{msg}\n\t{original}'
-        super().__init__(formatted_msg)
+        if exception is not None:
+            original_msg = str(exception).replace('\n', '\n\t')
+            msg += '\n\t' + original_msg
+        super().__init__(msg)
 
 
 def email_from_raw_data(raw_email_data: List[Any]) -> EmailMessage:
