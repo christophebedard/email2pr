@@ -4,9 +4,9 @@ import argparse
 from typing import Any
 from typing import List
 
-from . import poller
-
 from . import patch
+
+from . import poller
 
 from . import repo
 
