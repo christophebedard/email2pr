@@ -59,7 +59,7 @@ class EmailToPr():
         except utils.EmailToPrError as e:
             print(f'email2pr error: {e}')
 
-    def poll(self) -> None:
+    def launch(self) -> None:
         """Launch polling of email server."""
         self._poller.poll()
 
@@ -78,4 +78,4 @@ def main() -> None:
     # etopr = EmailToPr(args)
     p = params.Params('params.yaml')
     etopr = EmailToPr(p)
-    etopr.poll()
+    etopr.launch()
