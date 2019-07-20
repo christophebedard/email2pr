@@ -6,6 +6,8 @@ from typing import List
 
 from . import github
 
+from . import params
+
 from . import patch
 
 from . import poller
@@ -72,8 +74,10 @@ def parse_args() -> Any:
 
 def main() -> None:
     """Do setup for email2pr."""
-    args = parse_args()
-    etopr = EmailToPr(args)
+    # args = parse_args()
+    # etopr = EmailToPr(args)
+    p = params.Params('params.yaml')
+    etopr = EmailToPr(p)
     etopr.poll()
 
 

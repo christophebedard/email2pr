@@ -23,14 +23,14 @@ class EmailConnectionInfo():
         self,
         email_user: str,
         email_pass: str,
-        email_host: str,
-        email_port: int = IMAP4_SSL_PORT,
+        email_host: str = None,
+        email_port: int = None,
     ) -> None:
         """Constructor."""
         self.user = email_user
         self.passw = email_pass
-        self.host = email_host
-        self.port = email_port
+        self.host = email_host if email_host is not None else 'imap.gmail.com'
+        self.port = email_port if email_port is not None else IMAP4_SSL_PORT
 
     @classmethod
     def from_args(cls, args: Any):
