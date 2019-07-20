@@ -38,12 +38,12 @@ class EmailToPr():
         if repo is None or info is None:
             print('No repo URL key!')
             return None
-        # Create patch file, add to repo directory
+        # Create patch file in repo directory
         patch_filename = email_to_patch(msg, info.path)
-        # TODO
-        # Create new branch
-        # Apply git patch
+        # Apply git patch to new branch
+        self._manager.apply_patch(repo, info, patch_filename)
         # Push to remote
+        # TODO
         # Create PR
 
     def poll(self) -> None:

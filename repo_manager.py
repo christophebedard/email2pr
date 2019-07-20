@@ -69,7 +69,7 @@ class RepoManager():
     ) -> Union[Repo, None]:
         """
         Clone a new repo, selecting a specific branch if given.
-        
+
         :param info: the information of the repo to clone
         :return: the cloned repo object, or `None` if it failed
         """
@@ -108,6 +108,10 @@ class RepoManager():
     ) -> None:
         """
         Apply patch to repo.
+
+        :param repo: the repo object
+        :param info: the repo information
+        :param patch_filename: the name of the patch file (should be in the repo directory)
         """
         # Create new branch from the current one
         current_branch_name = repo.active_branch
