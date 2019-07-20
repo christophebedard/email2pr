@@ -177,7 +177,6 @@ class RepoManager():
         try:
             # Use local branch name as upstream branch name
             info_list = repo.remotes.origin.push(refspec=repo.active_branch)
-            print(f'summary: {info_list[0].summary}')
         except GitError as e:
             raise utils.EmailToPrError('failed to push branch to remote', e)
 
