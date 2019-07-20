@@ -8,7 +8,7 @@ from . import poller
 
 from . import patch
 
-from . import repo_manager
+from . import repo
 
 from . import utils
 
@@ -18,7 +18,7 @@ class EmailToPr():
 
     def __init__(self, args: Any) -> None:
         """Constructor."""
-        self._manager = repo_manager.RepoManager.from_args(args)
+        self._manager = repo.RepoManager.from_args(args)
         email_info = poller.EmailConnectionInfo.from_args(args)
         self._poller = poller.EmailPoller(
             email_info,
@@ -54,7 +54,7 @@ def parse_args() -> Any:
     """Parse all email2pr args."""
     parser = argparse.ArgumentParser(description='Create GitHub PRs from patch emails.')
     poller.add_args(parser)
-    repo_manager.add_args(parser)
+    repo.add_args(parser)
     return parser.parse_args()
 
 
