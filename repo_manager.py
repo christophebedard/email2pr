@@ -72,7 +72,7 @@ class RepoManager():
         self._repo_token = repo_token
         self._repos = {}
 
-    def clone(
+    def _clone(
         self,
         info: RepoInfo,
     ) -> Union[Repo, None]:
@@ -109,7 +109,7 @@ class RepoManager():
         # Target branch is not mandatory
         target_branch = utils.get_target_branch(msg.get_payload())
         info = RepoInfo(self._repo_dir, url, target_branch)
-        return self.clone(info), info
+        return self._clone(info), info
 
     def _checkout_new_branch(
         self,
@@ -214,7 +214,7 @@ def main() -> None:
     args = parse_args()
     manager = RepoManager.from_args(args)
     info = RepoInfo(args.repo_dir, 'https://github.com/christophebedard/email2pr.git', 'master')
-    repo = manager.clone(info)
+    repo = manager._clone(info)
     manager.apply_patch(repo, info, 'todo')
 
 
