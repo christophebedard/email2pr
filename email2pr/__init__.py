@@ -4,6 +4,8 @@ import argparse
 from typing import Any
 from typing import List
 
+from . import github
+
 from . import patch
 
 from . import poller
@@ -37,13 +39,21 @@ class EmailToPr():
             if repo is None or info is None:
                 raise utils.EmailToPrError('no repo URL key!')
             # Create patch file in repo directory
-            patch_filename = patch.email_to_patch(msg, info.path)
+            patch_filename, title, body = patch.email_to_patch(msg, info.path)
             # Apply git patch to new branch
-            self._manager.apply_patch(repo, patch_filename)
+            pr_branch, base_branch = self._manager.apply_patch(repo, patch_filename)
             # Push to remote
             self._manager.push(repo)
             # Create PR
-            # TODO
+            pr_info = github.PrInfo(
+                self._manager.repo_user,
+                info.name,
+                base_branch,
+                pr_branch,
+                title,
+                body)
+            url = github.create_pr(self._manager.repo_token, pr_info)
+            print(f'PR created: {url}')
         except utils.EmailToPrError as e:
             print(f'email2pr error: {e}')
 

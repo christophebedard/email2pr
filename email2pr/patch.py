@@ -56,13 +56,15 @@ def _crlf_to_lf(file_path: str) -> None:
 def email_to_patch(
     msg: EmailMessage,
     dest_path: str,
-) -> str:
+) -> Tuple[str, str, str]:
     """
     Create a patch file from a patch email.
 
     :param msg: the email message
     :param dest_path: the directory in which to create the patch file
-    :return: the file name of the created patch file
+    :return: (the file name of the created patch file,
+        the title of the patch,
+        the body of the patch)
     """
     msg_from = msg['from']
     msg_date = msg['date']
@@ -88,4 +90,7 @@ def email_to_patch(
             msg_payload,
         ])
     _crlf_to_lf(full_path)
-    return file_name
+
+    # The body of the commit is before the first '---'
+    patch_body = msg_payload[:msg_payload.find('\n---')]
+    return file_name, patch_title, patch_body

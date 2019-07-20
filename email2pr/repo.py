@@ -68,9 +68,8 @@ class RepoManager():
         :param repo_token: the token for remote repo authentication
         """
         self._repo_dir = repo_dir
-        self._repo_user = repo_user
-        self._repo_token = repo_token
-        self._repos = {}
+        self.repo_user = repo_user
+        self.repo_token = repo_token
 
     def _clone(
         self,
@@ -108,7 +107,7 @@ class RepoManager():
         if url is None:
             return None, None
         # Insert username and password into URL
-        url = utils.insert_token_in_remote_url(url, self._repo_user, self._repo_token)
+        url = utils.insert_token_in_remote_url(url, self.repo_user, self.repo_token)
         # Target branch is not mandatory
         target_branch = utils.get_target_branch(msg.get_payload())
         info = RepoInfo(self._repo_dir, url, target_branch)
@@ -117,14 +116,21 @@ class RepoManager():
     def _checkout_new_branch(
         self,
         repo: Repo,
-    ) -> None:
-        """Create and checkout new branch from current branch."""
-        current_branch_name = repo.active_branch
-        new_branch_name = f'{current_branch_name}-{time.strftime("%Y%m%d%H%M%S")}'
-        print(f"creating new branch '{new_branch_name}' from branch '{current_branch_name}'")
+    ) -> Tuple[str, str]:
+        """
+        Create and checkout new branch from current branch.
+
+        :param repo: the repo object
+        :return: (the name of the new branch on which to apply the patch,
+            the name of the original/base branch)
+        """
+        base_branch_name = str(repo.active_branch)
+        new_branch_name = f'{base_branch_name}-{time.strftime("%Y%m%d%H%M%S")}'
+        print(f"creating new branch '{new_branch_name}' from branch '{base_branch_name}'")
         new_branch = repo.create_head(new_branch_name)
         print('switching to new branch')
         repo.head.reference = new_branch
+        return new_branch_name, base_branch_name
 
     def _apply_patch_file(
         self,
@@ -152,17 +158,20 @@ class RepoManager():
         self,
         repo: Repo,
         patch_filename: str,
-    ) -> None:
+    ) -> str:
         """
         Apply patch to repo.
 
         :param repo: the repo object
         :param patch_filename: the name of the patch file (should be in the repo directory)
+        :return: (the name of the branch on which the patch was applied,
+            the name of the original/base branch)
         """
         # Create new branch from the current one
-        self._checkout_new_branch(repo)
+        new_branch_name, base_branch_name = self._checkout_new_branch(repo)
         # Apply patch file
         self._apply_patch_file(repo, patch_filename)
+        return new_branch_name, base_branch_name
 
     def push(
         self,
