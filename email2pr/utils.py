@@ -7,6 +7,10 @@ from typing import List
 from typing import Union
 
 
+class EmailToPrError(Exception):
+    """General class for email2pr error."""
+
+
 def email_from_raw_data(raw_email_data: List[Any]) -> EmailMessage:
     """Get email message from raw data."""
     email_string = raw_email_data[0][1].decode('utf-8')

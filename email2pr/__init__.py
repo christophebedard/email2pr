@@ -29,21 +29,24 @@ class EmailToPr():
     def _email_callback(self, raw_email_data: List[Any]) -> None:
         """Execute logic, on new email."""
         print(f'===new email!====')
-        msg = msg = utils.email_from_raw_data(raw_email_data)
-        # Clone repo
-        # TODO maybe it already exists
-        repo, info = self._manager.clone_from_email(msg)
-        if repo is None or info is None:
-            print('No repo URL key!')
-            return None
-        # Create patch file in repo directory
-        patch_filename = patch.email_to_patch(msg, info.path)
-        # Apply git patch to new branch
-        self._manager.apply_patch(repo, info, patch_filename)
-        # Push to remote
-        self._manager.push(repo)
-        # Create PR
-        # TODO
+        try:
+            msg = msg = utils.email_from_raw_data(raw_email_data)
+            # Clone repo
+            # TODO maybe it already exists
+            repo, info = self._manager.clone_from_email(msg)
+            if repo is None or info is None:
+                print('No repo URL key!')
+                return None
+            # Create patch file in repo directory
+            patch_filename = patch.email_to_patch(msg, info.path)
+            # Apply git patch to new branch
+            self._manager.apply_patch(repo, info, patch_filename)
+            # Push to remote
+            self._manager.push(repo)
+            # Create PR
+            # TODO
+        except utils.EmailToPrError as e:
+            print(f'email2pr failed: {e}')
 
     def poll(self) -> None:
         """Launch polling of email server."""
