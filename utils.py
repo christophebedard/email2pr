@@ -48,3 +48,23 @@ def get_target_branch(body: str) -> Union[str, None]:
     :return: the target branch value, or `None` if not found
     """
     return get_key_value(body, 'Target-Branch')
+
+
+def insert_token_in_remote_url(
+    url: str,
+    user: str,
+    token: str,
+) -> str:
+    """
+    Insert authentication token into remote URL.
+
+    This assumes that the URL includes '://'.
+
+    :param url: the original URL
+    :param user: the username
+    :param token: the token
+    :return: the URL with the inserted username and password
+    """
+    SEP = '://'
+    index = url.find(SEP) + len(SEP)
+    return url[:index] + user + ':' + token + '@' + url[index:]

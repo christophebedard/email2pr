@@ -57,13 +57,19 @@ class RepoManager():
     def __init__(
         self,
         repo_dir: str,
+        repo_user: str,
+        repo_token: str,
     ) -> None:
         """
         Constructor.
 
         :param repo_dir: the directory in which to put the repos
+        :param repo_user: the username for remote repo authentication
+        :param repo_token: the token for remote repo authentication
         """
         self._repo_dir = repo_dir
+        self._repo_user = repo_user
+        self._repo_token = repo_token
         self._repos = {}
 
     def clone(
@@ -98,6 +104,8 @@ class RepoManager():
         url = utils.get_repo_url(msg.get_payload())
         if url is None:
             return None, None
+        # Insert username and password into URL
+        url = utils.insert_token_in_remote_url(url, self._repo_user, self._repo_token)
         # Target branch is not mandatory
         target_branch = utils.get_target_branch(msg.get_payload())
         info = RepoInfo(self._repo_dir, url, target_branch)
@@ -173,7 +181,11 @@ class RepoManager():
     @classmethod
     def from_args(cls, args: Any):
         """Create RepoManager instance from parsed arguments."""
-        return RepoManager(args.repo_dir)
+        return RepoManager(
+            args.repo_dir,
+            args.repo_user,
+            args.repo_token,
+        )
 
 
 def add_args(parser: argparse.ArgumentParser) -> None:
@@ -182,6 +194,12 @@ def add_args(parser: argparse.ArgumentParser) -> None:
         '--repo-dir', '-d',
         help='the directory in which to put the repos (default: %(default)s)',
         default='/tmp/repos')
+    parser.add_argument(
+        'repo_user',
+        help='the username for remote repo authentication')
+    parser.add_argument(
+        'repo_token',
+        help='the token for remote repo authentication')
 
 
 def parse_args() -> Any:
@@ -194,7 +212,7 @@ def parse_args() -> Any:
 def main() -> None:
     """Entrypoint for testing."""
     args = parse_args()
-    manager = RepoManager(args.repo_dir)
+    manager = RepoManager.from_args(args)
     info = RepoInfo(args.repo_dir, 'https://github.com/christophebedard/email2pr.git', 'master')
     repo = manager.clone(info)
     manager.apply_patch(repo, info, 'todo')
