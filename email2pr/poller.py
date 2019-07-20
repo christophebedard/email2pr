@@ -11,9 +11,9 @@ from typing import List
 from typing import Tuple
 from typing import Union
 
-from email_to_patch import email_to_patch
+from . import patch
 
-import utils
+from . import utils
 
 
 class EmailConnectionInfo():
@@ -145,7 +145,7 @@ def parse_args() -> Any:
 def _test_callback(raw_email_data: List[Any]) -> None:
     print(f'===new email!====')
     msg = utils.email_from_raw_data(raw_email_data)
-    email_to_patch(msg, '/tmp')
+    patch.email_to_patch(msg, '/tmp')
 
 
 def main() -> None:

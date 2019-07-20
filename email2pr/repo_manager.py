@@ -14,7 +14,7 @@ from typing import Union
 from git import GitError
 from git import Repo
 
-import utils
+from . import utils
 
 
 class RepoInfo():
