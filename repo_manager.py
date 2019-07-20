@@ -51,7 +51,7 @@ class RepoInfo():
 
 
 class RepoManager():
-    """Class for managing local repos."""
+    """Class for managing repos."""
 
     def __init__(
         self,
