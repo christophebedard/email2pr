@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Module for dealing with git repos."""
 
 import argparse

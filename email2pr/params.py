@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Module for parameter file wrapper and parsing."""
 
 import yaml
