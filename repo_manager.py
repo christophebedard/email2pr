@@ -122,7 +122,7 @@ class RepoManager():
     ) -> None:
         """
         Apply patch to repo.
-        
+
         :param repo: the repo
         :param patch_filename: the name of the patch file to apply
         """
@@ -169,7 +169,6 @@ class RepoManager():
             print(f'summary: {info_list[0].summary}')
         except GitError as e:
             print(f'push failed: {e.message}')
-
 
     @classmethod
     def from_args(cls, args: Any):
