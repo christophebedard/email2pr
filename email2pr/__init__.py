@@ -30,7 +30,7 @@ class EmailToPr():
         """Execute logic, on new email."""
         print(f'===new email!====')
         try:
-            msg = msg = utils.email_from_raw_data(raw_email_data)
+            msg = utils.email_from_raw_data(raw_email_data)
             # Clone repo
             # TODO maybe it already exists
             repo, info = self._manager.clone_from_email(msg)
