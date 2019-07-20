@@ -3,6 +3,7 @@
 
 import argparse
 import os
+import time
 from email.message import EmailMessage
 from typing import Any
 from typing import Tuple
@@ -20,16 +21,16 @@ class RepoInfo():
         self,
         directory: str,
         url: str,
-        target_branch: str,
+        target_branch: str = None,
         name: str = None,
     ) -> None:
         """
         Constructor.
 
         :param directory: the directory that contains this repo
-        :param name: the name to use as a reference
-        :param target_branch: the name of the branch to use
         :param url: the origin remote URL for the repo
+        :param target_branch: the name of the branch to use, or `None` for default
+        :param name: the name to use as a reference, or `None` to extract from repo URL
         """
         self.dir = directory
         self.url = url
@@ -99,6 +100,26 @@ class RepoManager():
         info = RepoInfo(self._repo_dir, url, target_branch)
         return self.clone(info), info
 
+    def apply_patch(
+        self,
+        repo: Repo,
+        info: RepoInfo,
+        patch_filename: str,
+    ) -> None:
+        """
+        Apply patch to repo.
+        """
+        # Create new branch from the current one
+        current_branch_name = repo.active_branch
+        new_branch_name = f'{current_branch_name}-{time.strftime("%Y%m%d%H%M%S")}'
+        print(f"creating new branch '{new_branch_name}' from branch '{current_branch_name}'")
+        new_branch = repo.create_head(new_branch_name)
+        print('switching to new branch')
+        repo.head.reference = new_branch
+
+        # Apply patch file
+        # TODO
+
     @classmethod
     def from_args(cls, args: Any):
         """Create RepoManager instance from parsed arguments."""
@@ -124,7 +145,9 @@ def main() -> None:
     """Entrypoint for testing."""
     args = parse_args()
     manager = RepoManager(args.repo_dir)
-    manager.clone('https://github.com/christophebedard/email2pr.git')
+    info = RepoInfo(args.repo_dir, 'https://github.com/christophebedard/email2pr.git', 'master')
+    repo = manager.clone(info)
+    manager.apply_patch(repo, info, 'todo')
 
 
 if __name__ == '__main__':
