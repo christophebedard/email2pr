@@ -62,24 +62,36 @@ class EmailToPr():
 
 def parse_args() -> Any:
     """Parse all email2pr args."""
-    parser = argparse.ArgumentParser(description='Create GitHub PRs from patch emails.')
+    parser = argparse.ArgumentParser(
+        description='Create GitHub PRs from patch emails.',
+        epilog=(
+            'Instead of this, you can also simply provide a .yaml '
+            'param file name instead (default: params.yaml)'
+        ))
     poller.add_args(parser)
     repo.add_args(parser)
     return parser.parse_args()
 
 
-def main(argv=sys.argv) -> None:
-    """Do setup for email2pr."""
+def get_params(argv) -> Any:
     args = None
-    if len(argv) == 1:
-        args = params.Params('params.yaml')
+    # If all arguments given, or if help wanted, use argparse
+    if len(argv) > 2 or len(argv) == 2 and argv[1] == '-h' or len(argv) == 2 and argv[1] == '--help':
+        args = parse_args()
+    else:
+        params_file = argv[1] if len(argv) == 2 else None
+        args = params.Params(params_file)
         args.assert_params_defined([
             'email_user',
             'email_pass',
             'repo_user',
             'repo_token',
         ])
-    else:
-        args = parse_args()
+    return args
+
+
+def main(argv=sys.argv) -> None:
+    """Do setup for email2pr."""
+    args = get_params(argv)
     etopr = EmailToPr(args)
     etopr.launch()
