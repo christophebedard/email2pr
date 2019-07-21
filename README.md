@@ -53,7 +53,7 @@ repo_user:
 repo_token:
 ```
 
-You can also defined `email_host` and `email_port` if you don't want to use the default Gmail values.
+You can also define `email_host` and `email_port` if you don't want to use the default Gmail values.
 
 ## How to use
 
