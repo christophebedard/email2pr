@@ -60,7 +60,7 @@ class EmailToPr():
         self._poller.poll()
 
 
-def parse_args() -> Any:
+def get_parser() -> argparse.ArgumentParser:
     """Parse all email2pr args."""
     parser = argparse.ArgumentParser(
         description='Create GitHub PRs from patch emails.',
@@ -73,7 +73,7 @@ def parse_args() -> Any:
             repo.get_parser(),
         ]
     )
-    return parser.parse_args()
+    return parser
 
 
 def get_params(argv) -> Any:
@@ -82,7 +82,7 @@ def get_params(argv) -> Any:
     # use argparse, else use parameters file
     is_help = len(argv) == 2 and argv[1] in ['-h', '--help']
     if len(argv) > 2 or is_help:
-        args = parse_args()
+        args = get_parser().parse_args()
     else:
         params_file = argv[1] if len(argv) == 2 else None
         args = params.Params(params_file)
