@@ -71,7 +71,7 @@ def parse_args() -> Any:
 def main(argv=sys.argv) -> None:
     """Do setup for email2pr."""
     args = None
-    if len(argv) == 0:
+    if len(argv) == 1:
         args = params.Params('params.yaml')
         args.assert_params_defined([
             'email_user',
