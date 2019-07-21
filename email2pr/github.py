@@ -63,7 +63,7 @@ def create_pr(
         base=info.branch_base,
         body=info.body,
     )
-    return pr.url
+    return pr.html_url
 
 
 def add_args(parser: argparse.ArgumentParser) -> None:
