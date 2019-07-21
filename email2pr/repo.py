@@ -30,12 +30,12 @@ class RepoInfo():
         Constructor.
 
         :param directory: the directory that contains this repo
-        :param url: the origin remote URL for the repo
+        :param url: the origin remote URL for the repo ('.git' suffix is optional)
         :param base_branch: the name of the base branch to use, or `None` for default
         :param name: the name to use as a reference, or `None` to extract from repo URL
         """
         self.dir = directory
-        self.url = url
+        self.url = utils.add_git_suffix(url)
         if name is None:
             name = self._get_name_from_url(self.url)
         self.name = name
@@ -45,8 +45,7 @@ class RepoInfo():
     def _get_name_from_url(self, url: str) -> str:
         last_slash = url.rfind('/')
         name = url[(last_slash + 1):]
-        # Make sure there is no .git ending
-        name = name.strip('.git')
+        name = utils.strip_git_suffix(name)
         return name
 
 

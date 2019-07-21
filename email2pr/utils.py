@@ -85,3 +85,27 @@ def insert_token_in_remote_url(
     SEP = '://'
     index = url.find(SEP) + len(SEP)
     return url[:index] + user + ':' + token + '@' + url[index:]
+
+
+def strip_git_suffix(
+    original: str,
+) -> str:
+    """
+    Strip '.git' suffix if there is one.
+
+    :param original: the original string, which might or might not already contain the suffix
+    :return: the string without the suffix
+    """
+    return original.strip('.git')
+
+
+def add_git_suffix(
+    original: str,
+) -> str:
+    """
+    Add '.git' suffix if there isn't one already.
+
+    :param original: the original string, which might or might not already contain the suffix
+    :return: the string with the suffix
+    """
+    return original if original.endswith('.git') else original + '.git'

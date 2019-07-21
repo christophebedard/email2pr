@@ -66,13 +66,13 @@ Every time you want to create a pull request:
 
 1. Do your changes and commit.
 
-    Include the corresponding GitHub repo URL on the third line of your commit message.
+    Include the corresponding GitHub repo URL on the third line of your commit message. The `.git` suffix is optional.
 
     ```shell
     $ git add your/file
     $ git commit -m "Do some changes<enter>
     $ <enter>
-    $ Repo-Url: https://github.com/username-or-org/repo.git"
+    $ Repo-Url: https://github.com/username-or-org/repo"
     ```
 
 2. Create your patch file and send it.
