@@ -38,13 +38,16 @@ class RepoInfo():
         self.url = utils.add_git_suffix(url)
         self.branch = base_branch
         self.name = name if name is not None else self._get_name_from_url(self.url)
-        self.path = os.path.join(self.dir, self.name)
+        self.repo_path = self._get_repo_path(self.dir, self.name)
 
     def _get_name_from_url(self, url: str) -> str:
         last_slash = url.rfind('/')
         name = url[(last_slash + 1):]
         name = utils.strip_git_suffix(name)
         return name
+    
+    def _get_repo_path(self, directory: str, name: str) -> str:
+        return os.path.join(directory, name)
 
 
 class RepoManager():
@@ -71,14 +74,14 @@ class RepoManager():
         :param info: the information of the repo to clone
         :return: the cloned repo object, or `None` if it failed
         """
-        print(f"cloning repo '{info.name}' to: {info.path}")
+        print(f"cloning repo '{info.name}' to: {info.repo_path}")
         repo = None
         try:
             # If branch is not specified, we'll use the default branch
             if info.branch is None:
-                repo = Repo.clone_from(info.url, info.path)
+                repo = Repo.clone_from(info.url, info.repo_path)
             else:
-                repo = Repo.clone_from(info.url, info.path, branch=info.branch)
+                repo = Repo.clone_from(info.url, info.repo_path, branch=info.branch)
             return repo
         except GitError as e:
             raise utils.EmailToPrError('failed to clone repo', e)
