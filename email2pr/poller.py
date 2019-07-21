@@ -120,11 +120,18 @@ def add_args(parser: argparse.ArgumentParser) -> None:
         default=IMAP4_SSL_PORT)
 
 
+def get_parser() -> argparse.ArgumentParser:
+    """Get parser."""
+    parser = argparse.ArgumentParser(
+        description='Launch email poller.',
+        add_help=False)
+    add_args(parser)
+    return parser
+
+
 def parse_args() -> Any:
     """Parse email polling arguments."""
-    parser = argparse.ArgumentParser(description='Launch email poller.')
-    add_args(parser)
-    return parser.parse_args()
+    return get_parser().parse_args()
 
 
 def _test_callback(raw_email_data: List[Any]) -> None:

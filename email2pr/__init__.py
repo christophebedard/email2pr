@@ -67,9 +67,12 @@ def parse_args() -> Any:
         epilog=(
             'Instead of this, you can also simply provide a .yaml '
             'param file name instead (default: params.yaml)'
-        ))
-    poller.add_args(parser)
-    repo.add_args(parser)
+        ),
+        parents=[
+            poller.get_parser(),
+            repo.get_parser(),
+        ]
+    )
     return parser.parse_args()
 
 

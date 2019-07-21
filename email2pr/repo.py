@@ -201,11 +201,17 @@ def add_args(parser: argparse.ArgumentParser) -> None:
         help='the token for remote repo authentication')
 
 
+def get_parser() -> argparse.ArgumentParser:
+    """Get parser."""
+    parser = argparse.ArgumentParser(
+        description='Launch repo manager.',
+        add_help=False)
+    add_args(parser)
+    return parser
+
 def parse_args() -> Any:
     """Parse email polling arguments."""
-    parser = argparse.ArgumentParser(description='Launch repo manager.')
-    add_args(parser)
-    return parser.parse_args()
+    return get_parser().parse_args()
 
 
 def main() -> None:
