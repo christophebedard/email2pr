@@ -1,6 +1,7 @@
 """Main module with higher-level logic for email2pr."""
 
 import argparse
+import sys
 from typing import Any
 from typing import List
 
@@ -67,17 +68,19 @@ def parse_args() -> Any:
     return parser.parse_args()
 
 
-def main() -> None:
+def main(argv=sys.argv) -> None:
     """Do setup for email2pr."""
-    # args = parse_args()
-    # etopr = EmailToPr(args)
-    p = params.Params('params.yaml')
-    p.assert_params_defined([
-        'email_user',
-        'email_pass',
-        'repo_dir',
-        'repo_user',
-        'repo_token',
-    ])
-    etopr = EmailToPr(p)
+    args = None
+    if len(argv) == 0:
+        args = params.Params('params.yaml')
+        args.assert_params_defined([
+            'email_user',
+            'email_pass',
+            'repo_dir',
+            'repo_user',
+            'repo_token',
+        ])
+    else:
+        args = parse_args()
+    etopr = EmailToPr(args)
     etopr.launch()
