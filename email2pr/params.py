@@ -12,7 +12,7 @@ class Params():
 
     def __init__(
         self,
-        filename: str,
+        filename: str = None,
     ) -> None:
         """
         Constructor.
@@ -20,6 +20,7 @@ class Params():
         :param filename: the name of the parameters file to parse
         """
         self.params = {}
+        filename = filename if filename is not None else 'params.yaml'
         self._parse_params_file(filename)
 
     def _parse_params_file(self, filename: str) -> None:
