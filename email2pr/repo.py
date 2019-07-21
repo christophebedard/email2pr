@@ -23,7 +23,7 @@ class RepoInfo():
         self,
         directory: str,
         url: str,
-        target_branch: str = None,
+        base_branch: str = None,
         name: str = None,
     ) -> None:
         """
@@ -31,7 +31,7 @@ class RepoInfo():
 
         :param directory: the directory that contains this repo
         :param url: the origin remote URL for the repo
-        :param target_branch: the name of the branch to use, or `None` for default
+        :param base_branch: the name of the base branch to use, or `None` for default
         :param name: the name to use as a reference, or `None` to extract from repo URL
         """
         self.dir = directory
@@ -39,7 +39,7 @@ class RepoInfo():
         if name is None:
             name = self._get_name_from_url(self.url)
         self.name = name
-        self.branch = target_branch
+        self.branch = base_branch
         self.path = os.path.join(self.dir, self.name)
 
     def _get_name_from_url(self, url: str) -> str:
@@ -96,7 +96,7 @@ class RepoManager():
         msg: EmailMessage,
     ) -> Tuple[Union[Repo, None], Union[RepoInfo, None]]:
         """
-        Clone repo corresponding to email and checkout target branch.
+        Clone repo corresponding to email and checkout base branch.
 
         :param msg: the email message
         :return: (repo, repo information) or (`None`, `None`) if email has no URL
@@ -107,9 +107,9 @@ class RepoManager():
             return None, None
         # Insert username and password into URL
         url = utils.insert_token_in_remote_url(url, self.repo_user, self.repo_token)
-        # Target branch is not mandatory
-        target_branch = utils.get_target_branch(msg.get_payload())
-        info = RepoInfo(self._repo_dir, url, target_branch)
+        # Base branch is not mandatory
+        base_branch = utils.get_base_branch(msg.get_payload())
+        info = RepoInfo(self._repo_dir, url, base_branch)
         return self._clone(info), info
 
     def _checkout_new_branch(

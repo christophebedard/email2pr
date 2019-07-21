@@ -7,7 +7,7 @@ from typing import List
 from typing import Union
 
 KEY_REPO_URL = 'Github-Repo-Url'
-KEY_BASE_BRANCH = 'Target-Branch'
+KEY_BASE_BRANCH = 'Base-Branch'
 
 
 class EmailToPrError(Exception):
@@ -57,12 +57,12 @@ def get_repo_url(body: str) -> Union[str, None]:
     return get_key_value(body, KEY_REPO_URL)
 
 
-def get_target_branch(body: str) -> Union[str, None]:
+def get_base_branch(body: str) -> Union[str, None]:
     """
-    Extract target branch value from body.
+    Extract base branch value from body.
 
     :param body: the body in which to search
-    :return: the target branch value, or `None` if not found
+    :return: the base branch value, or `None` if not found
     """
     return get_key_value(body, KEY_BASE_BRANCH)
 
