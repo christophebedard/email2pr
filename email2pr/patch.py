@@ -27,7 +27,7 @@ def _get_patch_index(subject: str) -> Tuple[int, int]:
         return index, total
 
 
-def _get_patch_title(subject: str) -> str:
+def _get_patch_file_title(subject: str) -> str:
     """
     Get formatted patch title/filename from patch email subject.
 
@@ -63,7 +63,7 @@ def from_email(
     :param msg: the email message
     :param dest_path: the directory in which to create the patch file
     :return: (the file name of the created patch file,
-        the title of the patch,
+        the subject/title of the patch,
         the body of the patch)
     """
     msg_from = msg['from']
@@ -72,8 +72,8 @@ def from_email(
     msg_payload = msg.get_payload()
 
     index, total = _get_patch_index(msg_subject)
-    patch_title = _get_patch_title(msg_subject)
-    file_name = f'{index:04}-{patch_title}.patch'
+    patch_file_title = _get_patch_file_title(msg_subject)
+    file_name = f'{index:04}-{patch_file_title}.patch'
 
     # To be valid, there has to be a hash on the
     # first line, even if it doesn't mean anything
@@ -93,4 +93,4 @@ def from_email(
 
     # The body of the commit is before the first '---'
     patch_body = msg_payload[:msg_payload.find('\n---')]
-    return file_name, patch_title, patch_body
+    return file_name, msg_subject, patch_body
