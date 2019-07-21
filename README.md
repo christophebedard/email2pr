@@ -82,3 +82,8 @@ Every time you want to create a pull request:
     $ git format-patch -1
     $ get send-email --to=emailaddress@gmail.com *.patch
     ```
+
+## Limitations
+
+* Does not support creating a PR from multiple patches/emails.
+* No feedback after sending the patch by email.
