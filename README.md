@@ -80,7 +80,7 @@ Every time you want to create a pull request:
     For example, create a patch file from your last commit and then send it.
     ```shell
     $ git format-patch -1
-    $ get send-email --to=emailaddress@gmail.com *.patch
+    $ git send-email --to=emailaddress@gmail.com *.patch
     ```
 
 ## Limitations
