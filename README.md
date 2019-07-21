@@ -14,19 +14,9 @@ $ pip3 install --trusted-host pypi.python.org -r requirements.txt
 
 We'll need a couple things.
 
-1. Email account access to receive patches.
+1. Email account access to send your patches.
 
-    This is the email address we'll send our `git` patches to. For Gmail, you can easily generate an [app password](https://myaccount.google.com/apppasswords). Under *Select app*, click *Other (custom name)* and simply enter something like *email2pr*.
-
-    You also need to know the host and port to connect to the IMAP4 server over SSL. Default values are provided for Gmail, so no need to worry about this if you're using Gmail.
-
-2. GitHub account access to create pull requests.
-
-    Generate a [personal access token](https://github.com/settings/tokens). Under *Note*, you can again enter something like *email2pr*. Under *Select scopes*, you'll need to check at least *public_repo*, but you might want to simply check *repo* if you want this to work with your private repos).
-
-3. Email account access to send your patches.
-
-    Add [`git send-email` information](https://git-scm.com/docs/git-send-email#_examples) to your `.gitconfig` file. You can use the same email address and application password generated above, or you can use another email address.
+    Add [information for `git send-email`](https://git-scm.com/docs/git-send-email#_examples) to your `.gitconfig` file. For Gmail, you can easily generate an [app password](https://myaccount.google.com/apppasswords). Under *Select app*, click *Other (custom name)* and simply enter something like *email2pr*.
     ```
     [sendemail]
         smtpEncryption = tls
@@ -35,6 +25,16 @@ We'll need a couple things.
         smtpPass = 
         smtpServerPort = 587
     ```
+
+2. Email account access to receive patches.
+
+    This is the email address we'll send our `git` patches to. You can use the same email address and application password generated above, or you can use another email address.
+
+    You also need to know the host and port to connect to the IMAP4 server over SSL. Default values are provided for Gmail, so no need to worry about this if you're using Gmail.
+
+3. GitHub account access to create pull requests.
+
+    Generate a [personal access token](https://github.com/settings/tokens). Under *Note*, you can again enter something like *email2pr*. Under *Select scopes*, you'll need to check at least *public_repo*, but you might want to simply check *repo* if you want this to work with your private repos).
 
 ## Parameters file
 
