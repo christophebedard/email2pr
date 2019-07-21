@@ -45,12 +45,12 @@ Once you've gathered the necessary information, it's time to create your `params
 email_user:
 # Email account password (generated app password)
 email_pass:
-# Directory to use for cloning repos (recommended: /tmp/email2pr)
-repo_dir: /tmp/email2pr
 # GitHub username for pushing changes and creating pull requests
 repo_user:
 # GitHub token (generated personal access token)
 repo_token:
+# Directory to use for cloning repos (optional, default: /tmp/email2pr)
+repo_dir: /tmp/email2pr
 ```
 
 You can also define `email_host` and `email_port` if you don't want to use the default Gmail values.
