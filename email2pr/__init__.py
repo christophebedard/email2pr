@@ -75,8 +75,10 @@ def parse_args() -> Any:
 
 def get_params(argv) -> Any:
     args = None
-    # If all arguments given, or if help wanted, use argparse
-    if len(argv) > 2 or len(argv) == 2 and argv[1] == '-h' or len(argv) == 2 and argv[1] == '--help':
+    # If all arguments given, or if help wanted,
+    # use argparse, else use parameters file
+    is_help = len(argv) == 2 and argv[1] in ['-h', '--help']
+    if len(argv) > 2 or is_help:
         args = parse_args()
     else:
         params_file = argv[1] if len(argv) == 2 else None
