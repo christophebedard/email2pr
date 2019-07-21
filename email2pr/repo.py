@@ -34,7 +34,7 @@ class RepoInfo():
         :param base_branch: the name of the base branch to use, or `None` for default
         :param name: the name to use as a reference, or `None` to extract from repo URL
         """
-        self.dir = directory
+        self.dir = directory if directory is not None else '/tmp/repos'
         self.url = utils.add_git_suffix(url)
         if name is None:
             name = self._get_name_from_url(self.url)

@@ -76,7 +76,6 @@ def main(argv=sys.argv) -> None:
         args.assert_params_defined([
             'email_user',
             'email_pass',
-            'repo_dir',
             'repo_user',
             'repo_token',
         ])
