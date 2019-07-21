@@ -53,7 +53,7 @@ def _crlf_to_lf(file_path: str) -> None:
     f.close()
 
 
-def email_to_patch(
+def from_email(
     msg: EmailMessage,
     dest_path: str,
 ) -> Tuple[str, str, str]:

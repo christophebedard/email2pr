@@ -37,7 +37,7 @@ class EmailToPr():
             if repo is None or info is None:
                 raise utils.EmailToPrError('no repo URL key!')
             # Create patch file in repo directory
-            patch_filename, title, body = patch.email_to_patch(msg, info.path)
+            patch_filename, title, body = patch.from_email(msg, info.path)
             # Apply git patch to new branch
             pr_branch, base_branch = self._manager.apply_patch(repo, patch_filename)
             # Push to remote

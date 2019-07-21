@@ -130,7 +130,7 @@ def parse_args() -> Any:
 def _test_callback(raw_email_data: List[Any]) -> None:
     print(f'===new email!====')
     msg = utils.email_from_raw_data(raw_email_data)
-    patch.email_to_patch(msg, '/tmp')
+    patch.from_email(msg, '/tmp')
 
 
 def main() -> None:
