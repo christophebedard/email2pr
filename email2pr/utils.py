@@ -6,7 +6,7 @@ from typing import Any
 from typing import List
 from typing import Union
 
-KEY_REPO_URL = 'Github-Repo-Url'
+KEY_REPO_URL = 'Repo-Url'
 KEY_BASE_BRANCH = 'Base-Branch'
 
 
