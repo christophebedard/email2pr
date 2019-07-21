@@ -72,5 +72,12 @@ def main() -> None:
     # args = parse_args()
     # etopr = EmailToPr(args)
     p = params.Params('params.yaml')
+    p.assert_params_defined([
+        'email_user',
+        'email_pass',
+        'repo_dir',
+        'repo_user',
+        'repo_token',
+    ])
     etopr = EmailToPr(p)
     etopr.launch()

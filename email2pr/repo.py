@@ -54,20 +54,14 @@ class RepoManager():
 
     def __init__(
         self,
-        repo_dir: str,
-        repo_user: str,
-        repo_token: str,
+        params: str,
     ) -> None:
         """
         Constructor.
 
-        :param repo_dir: the directory in which to put the repos
-        :param repo_user: the username for remote repo authentication
-        :param repo_token: the token for remote repo authentication
+        :param params: the parameters container
         """
-        self._repo_dir = repo_dir
-        self.repo_user = repo_user
-        self.repo_token = repo_token
+        self._params = params
 
     def _clone(
         self,
@@ -106,10 +100,13 @@ class RepoManager():
         if url is None:
             return None, None
         # Insert username and password into URL
-        url = utils.insert_token_in_remote_url(url, self.repo_user, self.repo_token)
+        url = utils.insert_token_in_remote_url(
+            url,
+            self._params.repo_user,
+            self._params.repo_token)
         # Base branch is not mandatory
         base_branch = utils.get_base_branch(msg.get_payload())
-        info = RepoInfo(self._repo_dir, url, base_branch)
+        info = RepoInfo(self._params.repo_dir, url, base_branch)
         return self._clone(info), info
 
     def _checkout_new_branch(
