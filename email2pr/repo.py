@@ -36,10 +36,8 @@ class RepoInfo():
         """
         self.dir = directory if directory is not None else '/tmp/repos'
         self.url = utils.add_git_suffix(url)
-        if name is None:
-            name = self._get_name_from_url(self.url)
-        self.name = name
         self.branch = base_branch
+        self.name = name if name is not None else self._get_name_from_url(self.url)
         self.path = os.path.join(self.dir, self.name)
 
     def _get_name_from_url(self, url: str) -> str:
