@@ -6,6 +6,67 @@ Open a GitHub PR by sending a patch file by email.
 
 ## Prereqs
 
-```
+```shell
 $ pip3 install --trusted-host pypi.python.org -r requirements.txt
 ```
+
+## Setup
+
+We'll need a couple things.
+
+1. Email account access.
+
+    This is the email address we'll send our `git` patches to. For Gmail, you can easily generate an [app password](https://myaccount.google.com/apppasswords). Under *Select app*, click *Other (custom name)* and simply enter something like *email2pr*.
+
+    You also need to know the host and port to connect to the IMAP4 server over SSL. Default values are provided for Gmail, so no need to worry about this if you're using Gmail.
+
+2. GitHub account access.
+
+    This is the GitHub account that will create the pull requests. Generate a [personal access token](https://github.com/settings/tokens). Under *Note*, you can again enter something like *email2pr*. Under *Select scopes*, you'll need to check at least *public_repo*, but you might want to simply check *repo* if you want this to work with your private repos).
+
+## Parameters file
+
+Once you've gathered the necessary information, it's time to create your `params.yaml` file.
+
+```yaml
+# Email account username (email address)
+email_user:
+# Email account password (generated app password)
+email_pass:
+# Directory to use for cloning repos (recommended: /tmp/email2pr)
+repo_dir: /tmp/email2pr
+# GitHub username for pushing changes and creating pull requests
+repo_user:
+# GitHub token (generated personal access token)
+repo_token:
+```
+
+You can also defined `email_host` and `email_port` if you don't want to use the default Gmail values.
+
+## How to use
+
+First, launch `email2pr` in the root directory of this repository.
+```shell
+$ ./email2pr.py
+```
+
+Every time you want to create a pull request:
+
+1. Do your changes and commit.
+
+    Include the corresponding GitHub repo URL on the third line of your commit message.
+
+    ```shell
+    $ git add your/file
+    $ git commit -m "Do some changes<enter>
+    $ <enter>
+    $ Repo-Url: https://github.com/username-or-org/repo.git"
+    ```
+
+2. Create your patch file and send it.
+
+    For example, create a patch file from your last commit and then send it.
+    ```shell
+    $ git format-patch -1
+    $ get send-email --to=emailaddress@gmail.com *.patch
+    ```
