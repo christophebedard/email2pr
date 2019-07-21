@@ -83,6 +83,7 @@ class RepoManager():
         print(f"cloning repo '{info.name}' to: {info.path}")
         repo = None
         try:
+            # If branch is not specified, we'll use the default branch
             if info.branch is None:
                 repo = Repo.clone_from(info.url, info.path)
             else:
