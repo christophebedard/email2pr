@@ -186,15 +186,6 @@ class RepoManager():
         except GitError as e:
             raise utils.EmailToPrError('failed to push branch to remote', e)
 
-    @classmethod
-    def from_args(cls, args: Any):
-        """Create RepoManager instance from parsed arguments."""
-        return RepoManager(
-            args.repo_dir,
-            args.repo_user,
-            args.repo_token,
-        )
-
 
 def add_args(parser: argparse.ArgumentParser) -> None:
     """Add repo managing args."""
@@ -220,7 +211,7 @@ def parse_args() -> Any:
 def main() -> None:
     """Entrypoint for testing."""
     args = parse_args()
-    manager = RepoManager.from_args(args)
+    manager = RepoManager(args)
     info = RepoInfo(args.repo_dir, 'https://github.com/christophebedard/email2pr.git', 'master')
     repo = manager._clone(info)
     manager.apply_patch(repo, info, 'todo')

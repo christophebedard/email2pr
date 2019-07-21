@@ -19,26 +19,13 @@ class EmailConnectionInfo():
 
     def __init__(
         self,
-        email_user: str,
-        email_pass: str,
-        email_host: str = None,
-        email_port: int = None,
+        params: Any,
     ) -> None:
         """Constructor."""
-        self.user = email_user
-        self.passw = email_pass
-        self.host = email_host if email_host is not None else 'imap.gmail.com'
-        self.port = email_port if email_port is not None else IMAP4_SSL_PORT
-
-    @classmethod
-    def from_args(cls, args: Any):
-        """Create EmailConnectionInfo instance from parsed arguments."""
-        return EmailConnectionInfo(
-            args.email_user,
-            args.email_pass,
-            args.email_host,
-            args.email_port,
-        )
+        self.user = params.email_user
+        self.passw = params.email_pass
+        self.host = params.email_host if params.email_host is not None else 'imap.gmail.com'
+        self.port = params.email_port if params.email_port is not None else IMAP4_SSL_PORT
 
 
 class EmailPoller():
@@ -149,7 +136,7 @@ def _test_callback(raw_email_data: List[Any]) -> None:
 def main() -> None:
     """Email polling entrypoint for testing."""
     args = parse_args()
-    info = EmailConnectionInfo.from_args(args)
+    info = EmailConnectionInfo(args)
     poller = EmailPoller(
         info,
         _test_callback,

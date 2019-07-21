@@ -18,8 +18,8 @@ class EmailToPr():
 
     def __init__(self, args: Any) -> None:
         """Constructor."""
-        self._manager = repo.RepoManager.from_args(args)
-        email_info = poller.EmailConnectionInfo.from_args(args)
+        self._manager = repo.RepoManager(args)
+        email_info = poller.EmailConnectionInfo(args)
         self._poller = poller.EmailPoller(
             email_info,
             self._email_callback,
